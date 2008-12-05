@@ -2,10 +2,7 @@ require 'activesupport'
 module ActiveSupport
   module Cache
     # Like MemoryStore, but caches are expired after the period specified in the :expires_in option.
-    class ExpiringMemoryStore < Store
-      def initialize
-        @data = {}
-      end
+    class ExpiringMemoryStore < MemoryStore
 
       def read(name, options = nil)
         super
@@ -21,25 +18,6 @@ module ActiveSupport
         super
         @data[name] = [value.freeze, expires_at(options)].freeze
         return value
-      end
-
-      def delete(name, options = nil)
-        super
-        @data.delete(name)
-      end
-
-      def delete_matched(matcher, options = nil)
-        super
-        @data.delete_if { |k,v| k =~ matcher }
-      end
-
-      def exist?(name,options = nil)
-        super
-        @data.has_key?(name)
-      end
-
-      def clear
-        @data.clear
       end
       
       private
