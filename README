@@ -1,0 +1,28 @@
+ExpiringMemoryStore
+===================
+
+Expiring MemoryStore is a modification to the default Rails MemoryStore which adds the :expires_in functionality that is so useful with Memcache.
+Although this increases the memory overhead slightly,
+it ensures that caches can be expired easily, without restarting your webserver.
+
+Just add;
+  config.cache_store = :expiring_memory_store
+to your environment.rb.
+
+Example
+=======
+
+  >> Rails.cache.write('are you there?', :im_still_here, :expires_in => 30)
+  => :im_still_here
+
+  >> Rails.cache.read('are you there?')
+  => :im_still_here
+
+wait 30 seconds
+
+  >> Rails.cache.read('are you there?')
+  => nil
+
+WICKED!!!
+
+Copyright (c) 2008 [Matthew Rudy Jacobs], released under the MIT license
