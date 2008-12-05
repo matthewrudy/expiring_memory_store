@@ -100,6 +100,17 @@ class ExpiringMemoryStoreTest < Test::Unit::TestCase
     assert_equal 'bar', @cache.read('foo')
   end
   
+  def test_values_should_not_expire_if_expires_in_is_set_to_zero
+    time_now = Time.now
+    Time.stubs(:now).returns(time_now)
+    
+    @cache.write('foo', 'bar', :expires_in => 0)
+    assert_equal 'bar', @cache.read('foo')
+    
+    Time.stubs(:now).returns(time_now + 5.years )
+    assert_equal 'bar', @cache.read('foo')
+  end
+  
   def test_values_should_expire_is_param_is_set
     time_now = Time.now
     Time.stubs(:now).returns(time_now)
